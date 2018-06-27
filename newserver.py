@@ -198,10 +198,13 @@ class Ui(urwid.WidgetPlaceholder):
 
         # Open RRH full content view
         if key == 'f1':
-            self.loop.widget = self.ue_view()
+            self.loop.widget = self.ue_view_rrh1()
 
-        if key == '1':
-            self.loop.widget = self.ue_view()
+        if key == 'f2':
+            self.loop.widget = self.ue_view_rrh2()
+
+        if key == 'f3':
+            self.loop.widget = self.ue_view_rrh3()
 
         # Set behavior with Tab
         if key in ('Tab', 'tab'):
@@ -412,16 +415,25 @@ class Ui(urwid.WidgetPlaceholder):
         # self.imsiList = re.findall(r"imsi:(.+?),", self.content)
 
 
-    def ue_view(self):
+    def ue_view_rrh1(self):
         """
-        RRH state window content
+        RRH1 state window content
 
         Input  : None
         Output :
-         frame : urwid Frame object - showing content of RRH state window
+         frame : urwid Frame object - showing content of RRH1 state window
         """
         # State of screen
-        self.state = 'log'
+        self.state = 'log_rrh1'
+
+        # Title denote server
+        rrh1Title = []
+        rrh1Title.append(urwid.Divider('-'))
+        rrh1Title.append(urwid.AttrWrap(urwid.Text("RRH 1", 'center'), 'rrh1'))
+        rrh1Title.append(urwid.Divider('-'))
+        rrh1TitleGrid = urwid.GridFlow(rrh1Title, 16, 0, 1, 'left')
+
+        statusTable = [rrh1TitleGrid]
 
         # Column title
         title = []
@@ -437,20 +449,12 @@ class Ui(urwid.WidgetPlaceholder):
         border.append(urwid.Divider('-'))
         borderGrid = urwid.GridFlow(border, 16, 0, 1, 'left')
 
-        statusTable = [titleGrid]
+        statusTable.append(titleGrid)
 
         if (self.rrh1SocketExist):
             # Each element in 'content' list is a row's content.
             content1 = [None] * len(self.rrh1Specific[0])
             gridContent1 = [None] * len(self.rrh1Specific[0])
-
-            # Title denote server
-            rrh1Title = []
-            rrh1Title.append(urwid.Divider('-'))
-            rrh1Title.append(urwid.AttrWrap(urwid.Text("RRH 1", 'center'), 'bg'))
-            rrh1Title.append(urwid.Divider('-'))
-            rrh1TitleGrid = urwid.GridFlow(rrh1Title, 16, 0, 1, 'left')
-            statusTable.append(rrh1TitleGrid)
 
             # Decorate each row in table
             for index in range(0, len(self.rrh1Specific[0])):
@@ -459,29 +463,66 @@ class Ui(urwid.WidgetPlaceholder):
                                   urwid.AttrWrap(urwid.Text(self.rrh1Specific[2][index], 'center'), 'bg')]
                 gridContent1[index] = urwid.GridFlow(content1[index], 16, 0, 1, 'left')
 
+                # Add detail to screen table content
+                statusTable.append(gridContent1[index])
+                statusTable.append(borderGrid)
+
             # Build a rrh_status_window
             # Create table of content
             # statusTable1 = []
 
-            for index in range(0, len(self.rrh1Specific[0])):
-                statusTable.append(gridContent1[index])
-                statusTable.append(borderGrid)
+            # for index in range(0, len(self.rrh1Specific[0])):
+            #     statusTable.append(gridContent1[index])
+            #     statusTable.append(borderGrid)
 
             statusTable.append(borderGrid)
             # statusTable.append(borderGrid)
+
+        rrhWindow = urwid.SimpleListWalker(statusTable)
+
+        # Frame for RRH status window
+        return urwid.AttrMap(urwid.Frame(urwid.ListBox(rrhWindow), self.menubar(), self.statusbar()), 'bg')
+
+    def ue_view_rrh2(self):
+        """
+        RRH2 state window content
+
+        Input  : None
+        Output :
+         frame : urwid Frame object - showing content of RRH2 state window
+        """
+        # State of screen
+        self.state = 'log_rrh2'
+
+        # Title denote server
+        rrh2Title = []
+        rrh2Title.append(urwid.Divider('-'))
+        rrh2Title.append(urwid.AttrWrap(urwid.Text("RRH 2", 'center'), 'rrh2'))
+        rrh2Title.append(urwid.Divider('-'))
+        rrh2TitleGrid = urwid.GridFlow(rrh2Title, 16, 0, 1, 'left')
+
+        statusTable = [rrh2TitleGrid]
+
+        # Column title
+        title = []
+        title.append(urwid.AttrWrap(urwid.Text("UEID", 'center'), 'menuf'))
+        title.append(urwid.AttrWrap(urwid.Text("IMSI", 'center'), 'menuf'))
+        title.append(urwid.AttrWrap(urwid.Text("STATUS", 'center'), 'menuf'))
+        titleGrid = urwid.GridFlow(title, 16, 0, 1, 'left')
+
+        # Lines separate rows in table
+        border = []
+        border.append(urwid.Divider('-'))
+        border.append(urwid.Divider('.'))
+        border.append(urwid.Divider('-'))
+        borderGrid = urwid.GridFlow(border, 16, 0, 1, 'left')
+
+        statusTable.append(titleGrid)
 
         if (self.rrh2SocketExist):
             # Each element in 'content' list is a row's content.
             content2 = [None] * len(self.rrh2Specific[0])
             gridContent2 = [None] * len(self.rrh2Specific[0])
-
-            # Title denote server
-            rrh2Title = []
-            rrh2Title.append(urwid.Divider('-'))
-            rrh2Title.append(urwid.AttrWrap(urwid.Text("RRH 2", 'center'), 'bg'))
-            rrh2Title.append(urwid.Divider('-'))
-            rrh2TitleGrid = urwid.GridFlow(rrh2Title, 16, 0, 1, 'left')
-            statusTable.append(rrh2TitleGrid)
 
             # Decorate each row in table
             for index in range(0, len(self.rrh2Specific[0])):
@@ -490,30 +531,66 @@ class Ui(urwid.WidgetPlaceholder):
                                    urwid.AttrWrap(urwid.Text(self.rrh2Specific[2][index], 'center'), 'bg')]
                 gridContent2[index] = urwid.GridFlow(content2[index], 16, 0, 1, 'left')
 
+                # Add detail to screen table content
+                statusTable.append(gridContent2[index])
+                statusTable.append(borderGrid)
+
             # Build a rrh_status_window
             # Create table of content
             # statusTable2 = []
 
-            for index in range(0, len(self.rrh2Specific[0])):
-                statusTable.append(gridContent2[index])
-                statusTable.append(borderGrid)
+            # for index in range(0, len(self.rrh2Specific[0])):
+            #     statusTable.append(gridContent2[index])
+            #     statusTable.append(borderGrid)
 
             statusTable.append(borderGrid)
             # statusTable.append(borderGrid)
 
+            rrhWindow = urwid.SimpleListWalker(statusTable)
+
+            # Frame for RRH status window
+            return urwid.AttrMap(urwid.Frame(urwid.ListBox(rrhWindow), self.menubar(), self.statusbar()), 'bg')
+
+    def ue_view_rrh3(self):
+        """
+        RRH3 state window content
+
+        Input  : None
+        Output :
+         frame : urwid Frame object - showing content of RRH3 state window
+        """
+        # State of screen
+        self.state = 'log_rrh3'
+
+        # Title denote server
+        rrh3Title = []
+        rrh3Title.append(urwid.Divider('-'))
+        rrh3Title.append(urwid.AttrWrap(urwid.Text("RRH 3", 'center'), 'button select'))
+        rrh3Title.append(urwid.Divider('-'))
+        rrh3TitleGrid = urwid.GridFlow(rrh3Title, 16, 0, 1, 'left')
+
+        statusTable = [rrh3TitleGrid]
+
+        # Column title
+        title = []
+        title.append(urwid.AttrWrap(urwid.Text("UEID", 'center'), 'menuf'))
+        title.append(urwid.AttrWrap(urwid.Text("IMSI", 'center'), 'menuf'))
+        title.append(urwid.AttrWrap(urwid.Text("STATUS", 'center'), 'menuf'))
+        titleGrid = urwid.GridFlow(title, 16, 0, 1, 'left')
+
+        statusTable.append(titleGrid)
+
+        # Lines separate rows in table
+        border = []
+        border.append(urwid.Divider('-'))
+        border.append(urwid.Divider('.'))
+        border.append(urwid.Divider('-'))
+        borderGrid = urwid.GridFlow(border, 16, 0, 1, 'left')
 
         if (self.rrh3SocketExist):
             # Each element in 'content' list is a row's content.
             content3 = [None] * len(self.rrh3Specific[0])
             gridContent3 = [None] * len(self.rrh3Specific[0])
-
-            # Title denote server
-            rrh3Title = []
-            rrh3Title.append(urwid.Divider('-'))
-            rrh3Title.append(urwid.AttrWrap(urwid.Text("RRH 3", 'center'), 'bg'))
-            rrh3Title.append(urwid.Divider('-'))
-            rrh3TitleGrid = urwid.GridFlow(rrh3Title, 16, 0, 1, 'left')
-            statusTable.append(rrh3TitleGrid)
 
             # Decorate each row in table
             for index in range(0, len(self.rrh3Specific[0])):
@@ -522,46 +599,23 @@ class Ui(urwid.WidgetPlaceholder):
                                    urwid.AttrWrap(urwid.Text(self.rrh3Specific[2][index], 'center'), 'bg')]
                 gridContent3[index] = urwid.GridFlow(content3[index], 16, 0, 1, 'left')
 
-            # Build a rrh_status_window
-            # Create table of content
-            # statusTable3 = []
-
-            for index in range(0, len(self.rrh3Specific[0])):
+                # Add detail to screen table content
                 statusTable.append(gridContent3[index])
                 statusTable.append(borderGrid)
 
+            # Build a rrh_status_window
+            # Create table of content
+            # for index in range(0, len(self.rrh3Specific[0])):
+                # statusTable.append(gridContent3[index])
+                # statusTable.append(borderGrid)
+
             statusTable.append(borderGrid)
-            # statusTable.append(borderGrid)
 
-            # statusTable.append(statusTable3)
+            rrhWindow = urwid.SimpleListWalker(statusTable)
 
+            # Frame for RRH status window
+            return urwid.AttrMap(urwid.Frame(urwid.ListBox(rrhWindow), self.menubar(), self.statusbar()), 'bg')
 
-
-        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@222
-        # Each element in 'content' list is a row's content.
-        # content = [None] * len(self.ueidList)
-        # gridContent = [None] * len(self.ueidList)
-        #
-        # # Decorate each row in table
-        # for index in range(0, len(self.ueidList)):
-        #     content[index] = [urwid.AttrWrap(urwid.Text(self.ueidList[index], 'center'), 'bg'),
-        #                       urwid.AttrWrap(urwid.Text(self.imsiList[index], 'center'), 'bg'),
-        #                       urwid.AttrWrap(urwid.Text(self.statusList[index], 'center'), 'bg')]
-        #     gridContent[index] = urwid.GridFlow(content[index], 16, 0, 1, 'left')
-
-
-        # Build a rrh_status_window
-        # Create table of content
-        # statusTable = [titleGrid]
-        #
-        # for index in range(0, len(self.ueidList)):
-        #     statusTable.append(gridContent[index])
-        #     statusTable.append(borderGrid)
-
-        rrhWindow = urwid.SimpleListWalker(statusTable)
-
-        # Frame for RRH status window
-        return urwid.AttrMap(urwid.Frame(urwid.ListBox(rrhWindow), self.menubar(), self.statusbar()), 'bg')
 
 
     def status_view(self):
@@ -637,7 +691,9 @@ class Ui(urwid.WidgetPlaceholder):
                ('alert', 'light gray', 'dark red', ('standout', 'bold')),
                ('button normal', 'yellow', 'dark cyan', 'standout'),
                ('button select', 'white', 'dark green'),
-               ('button choice', 'light gray', 'dark blue', 'standout')
+               ('button choice', 'light gray', 'dark blue', 'standout'),
+               ('rrh1', 'white', 'brown'),
+               ('rrh2', 'white', 'dark magenta')
                ]
 
     def refresh(self, dump_, _foo):
@@ -647,9 +703,15 @@ class Ui(urwid.WidgetPlaceholder):
             self.loop.widget = self.status_view()
 
         # Update RRH status window
-        elif self.state == 'log':
+        elif self.state == 'log_rrh1':
             self.check_ue_state()
-            self.loop.widget = self.ue_view()
+            self.loop.widget = self.ue_view_rrh1()
+        elif self.state == 'log_rrh2':
+            self.check_ue_state()
+            self.loop.widget = self.ue_view_rrh2()
+        elif self.state == 'log_rrh3':
+            self.check_ue_state()
+            self.loop.widget = self.ue_view_rrh3()
         else:
             pass
 
