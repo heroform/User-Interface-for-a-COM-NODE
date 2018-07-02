@@ -43,72 +43,43 @@ class Ui(urwid.WidgetPlaceholder):
 
         # User-defined parameters on configuration window
         para = self.parserParameter
-        # Create new object of Configparser
-        config = ConfigParser()
-
-        # Content in config file
-        config.read('config.ini.example')
-
-        # Set text for 'CORE NETWOK' part in config file
-        config.set('CORE NETWORK', 'op', para[0])
-        config.set('CORE NETWORK', 'ki', para[1])
-
-        # Set text for BBU part in config file
-        config.set('BBU', 'BBU_ip_list', "[\"" + para[2].replace(" ", "\",\"") + "\"]")
-
-        # Set text for RRH part in config file
-        config.set('RRH', 'number_of_rrh', para[3])
-        config.set('RRH', 'number_of_UE_per_rrh', para[4])  # dau bang ban goc khong cach
-        config.set('RRH', 'rrh_ip_start', para[5])
-        config.set('RRH', 'rrh_netmask', para[6])
-        config.set('RRH', 'rrh_gateway', para[7])
-        config.set('RRH', 'rrh_interface', para[10])  # Last parameter is rrh_interface according to
-
-        # parse_value function
-        config.set('RRH', 'imsi_start', para[8])
-        config.set('RRH', 'traffic_target', para[9])
-
-        # Writing to configuration file
-        with open('config.ini.example', 'w') as configFile:
-            config.write(configFile)
-            # config.write(EqualsSpaceRemover(configFile))
 
         self.status.set_text("Statusbar -- Press Alt + <key> for menu entries")
 
-        # try:
-        #     # Create new object of Configparser
-        #     config = ConfigParser()
-        #
-        #     # Content in config file
-        #     config.read('config.ini.example')
-        #
-        #     # Set text for 'CORE NETWOK' part in config file
-        #     config.set('CORE NETWORK', 'op', para[0])
-        #     config.set('CORE NETWORK', 'ki', para[1])
-        #
-        #     # Set text for BBU part in config file
-        #     config.set('BBU', 'BBU_ip_list', "[\"" + para[2].replace(" ", "\",\"") + "\"]")
-        #
-        #     # Set text for RRH part in config file
-        #     config.set('RRH', 'number_of_rrh', para[3])
-        #     config.set('RRH', 'number_of_UE_per_rrh', para[4])  # dau bang ban goc khong cach
-        #     config.set('RRH', 'rrh_ip_start', para[5])
-        #     config.set('RRH', 'rrh_netmask', para[6])
-        #     config.set('RRH', 'rrh_gateway', para[7])
-        #     config.set('RRH', 'rrh_interface', para[10])  # Last parameter is rrh_interface according to
-        #
-        #     # parse_value function
-        #     config.set('RRH', 'imsi_start', para[8])
-        #     config.set('RRH', 'traffic_target', para[9])
-        #
-        #     # Writing to configuration file
-        #     with open('config.ini.example', 'wb') as configFile:
-        #         config.write(configFile)
-        #         # config.write(EqualsSpaceRemover(configFile))
-        #
-        #     self.status.set_text("Statusbar -- Press Alt + <key> for menu entries")
-        # except:
-        #     self.status.set_text("Not fill all parameters or No config file!")
+        try:
+            # Create new object of Configparser
+            config = ConfigParser()
+
+            # Content in config file
+            config.read('config.ini.example')
+
+            # Set text for 'CORE NETWOK' part in config file
+            config.set('CORE NETWORK', 'op', para[0])
+            config.set('CORE NETWORK', 'ki', para[1])
+
+            # Set text for BBU part in config file
+            config.set('BBU', 'BBU_ip_list', "[\"" + para[2].replace(" ", "\",\"") + "\"]")
+
+            # Set text for RRH part in config file
+            config.set('RRH', 'number_of_rrh', para[3])
+            config.set('RRH', 'number_of_UE_per_rrh', para[4])  # dau bang ban goc khong cach
+            config.set('RRH', 'rrh_ip_start', para[5])
+            config.set('RRH', 'rrh_netmask', para[6])
+            config.set('RRH', 'rrh_gateway', para[7])
+            config.set('RRH', 'rrh_interface', para[10])  # Last parameter is rrh_interface according to
+
+            # parse_value function
+            config.set('RRH', 'imsi_start', para[8])
+            config.set('RRH', 'traffic_target', para[9])
+
+            # Writing to configuration file
+            with open('config.ini.example', 'w') as configFile:
+                config.write(configFile)
+                # config.write(EqualsSpaceRemover(configFile))
+
+            self.status.set_text("Statusbar -- Press Alt + <key> for menu entries")
+        except:
+            self.status.set_text("Not fill all parameters or No config file!")
 
     # Create interface
     def button(self, caption):  # TODO: Add callback
